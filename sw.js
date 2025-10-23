@@ -1,16 +1,62 @@
-const CACHE_NAME = 'najd-smart-cache-v2';
+
+const CACHE_NAME = 'najd-smart-cache-v3';
 // Essential files for the app shell to work offline
 const APP_SHELL_URLS = [
   '/',
   '/index.html',
+  '/manifest.json',
+  '/metadata.json',
   '/index.tsx',
   '/App.tsx',
-  '/metadata.json',
   '/types.ts',
-  '/components/SearchPage.tsx',
-  '/components/HomePage.tsx',
+  '/services/geminiService.ts',
+  '/services/geminiTools.ts',
+  '/services/liveService.ts',
+  '/utils/audio.ts',
+  '/hooks/useParallax.ts',
+  '/components/icons/SaduPattern.tsx',
+  '/components/AiGen6Page.tsx',
+  '/components/AiGen6CreativePage.tsx',
+  '/components/BlueWaves.tsx',
+  '/components/BrowserFrame.tsx',
+  '/components/BusinessPage.tsx',
+  '/components/ChatMessage.tsx',
+  '/components/ChatBubble.tsx',
+  '/components/Clock.tsx',
+  '/components/CorporateResearchPage.tsx',
+  '/components/DarkWaves.tsx',
+  '/components/DashboardWidgets.tsx',
+  '/components/DesertNightSky.tsx',
+  '/components/DigitalDesert.tsx',
+  '/components/FooterContent.tsx',
   '/components/Header.tsx',
-  '/services/geminiService.ts'
+  '/components/HomePage.tsx',
+  '/components/InteractiveDarkBackground.tsx',
+  '/components/LiveConversationPage.tsx',
+  '/components/LoadingSpinner.tsx',
+  '/components/MeetingPage.tsx',
+  '/components/ModernSky.tsx',
+  '/components/NajdiAiPage.tsx',
+  '/components/NajdiConnectPage.tsx',
+  '/components/NajdiEmailPage.tsx',
+  '/components/NajdiLogo.tsx',
+  '/components/NajdiSpeedTestPage.tsx',
+  '/components/PresentationBuilderPage.tsx',
+  '/components/ProjectSpacePage.tsx',
+  '/components/PulsingStars.tsx',
+  '/components/SearchBar.tsx',
+  '/components/SearchPage.tsx',
+  '/components/SearchResults.tsx',
+  '/components/SpreadsheetGrid.tsx',
+  '/components/SpreadsheetPage.tsx',
+  '/components/ThinkingModeSwitch.tsx',
+  '/components/TrendingSearches.tsx',
+  '/components/TtsPage.tsx',
+  '/components/WebAppBuilderPage.tsx',
+  '/components/Weather.tsx',
+  '/components/WordProcessorPage.tsx',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png'
 ];
 
 self.addEventListener('install', event => {
@@ -34,6 +80,7 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
