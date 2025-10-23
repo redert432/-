@@ -16,10 +16,11 @@ import SpreadsheetPage from './components/SpreadsheetPage';
 import WordProcessorPage from './components/WordProcessorPage';
 import PresentationBuilderPage from './components/PresentationBuilderPage';
 import WebAppBuilderPage from './components/WebAppBuilderPage'; // Import the new page
+import BuildLogsPage from './components/BuildLogsPage';
 import { UserAccount, ProjectFile } from './types';
 import MeetingPage from './components/MeetingPage';
 
-export type Page = 'home' | 'search' | 'email' | 'speedtest' | 'live' | 'tts' | 'business' | 'aigen6' | 'aigen6-creative' | 'projectspace' | 'cr' | 'spreadsheet' | 'word-processor' | 'presentation-builder' | 'meeting' | 'webapp-builder';
+export type Page = 'home' | 'search' | 'email' | 'speedtest' | 'live' | 'tts' | 'business' | 'aigen6' | 'aigen6-creative' | 'projectspace' | 'cr' | 'spreadsheet' | 'word-processor' | 'presentation-builder' | 'meeting' | 'webapp-builder' | 'build-logs';
 export type Theme = 'default' | 'classic' | 'modern' | 'dark' | 'interactive-dark' | 'blue-purple-interactive';
 
 const DEFAULT_STORAGE = 50 * 1024 * 1024 * 1024; // 50 GB
@@ -152,7 +153,7 @@ function App() {
   };
 
   useEffect(() => {
-    if (['aigen6', 'aigen6-creative', 'spreadsheet', 'word-processor', 'presentation-builder', 'meeting', 'webapp-builder'].includes(currentPage)) {
+    if (['aigen6', 'aigen6-creative', 'spreadsheet', 'word-processor', 'presentation-builder', 'meeting', 'webapp-builder', 'build-logs'].includes(currentPage)) {
         setActiveTheme('dark');
     } else {
         setActiveTheme(userTheme);
@@ -187,7 +188,7 @@ function App() {
       className={`relative min-h-screen w-full text-[rgb(var(--color-text-main))] animated-background ${themeGradients[activeTheme]}`}
     >
       <Header onNavigate={navigateTo} theme={userTheme} setTheme={setUserTheme} />
-      {(!['aigen6', 'aigen6-creative', 'spreadsheet', 'word-processor', 'presentation-builder', 'meeting', 'webapp-builder'].includes(currentPage)) && <DigitalDesert theme={activeTheme} />}
+      {(!['aigen6', 'aigen6-creative', 'spreadsheet', 'word-processor', 'presentation-builder', 'meeting', 'webapp-builder', 'build-logs'].includes(currentPage)) && <DigitalDesert theme={activeTheme} />}
       
       {currentPage === 'home' && <HomePage onNavigate={navigateTo} />}
       {currentPage === 'search' && <SearchPage onNavigate={navigateTo} />}
@@ -204,6 +205,7 @@ function App() {
       {currentPage === 'word-processor' && <WordProcessorPage onNavigate={navigateTo} onSaveToProjectSpace={addProjectFile} />}
       {currentPage === 'presentation-builder' && <PresentationBuilderPage onNavigate={navigateTo} onSaveToProjectSpace={addProjectFile} />}
       {currentPage === 'webapp-builder' && <WebAppBuilderPage onNavigate={navigateTo} onSaveToProjectSpace={addProjectFile} />}
+      {currentPage === 'build-logs' && <BuildLogsPage onNavigate={navigateTo} />}
       {currentPage === 'meeting' && activeMeeting && <MeetingPage meetingId={activeMeeting.id} onLeave={() => navigateTo('email')} isHost={activeMeeting.isHost} />}
 
     </div>
