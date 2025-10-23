@@ -1,0 +1,9 @@
+{
+  "name": "نجد الذكية",
+  "description": "منصة 'نجد الذكية' هي بوابتك المتكاملة للبحث والتواصل والأعمال، مدعومة بالذكاء الاصطناعي من Gemini ومصممة بروح سعودية عصرية.",
+  "requestFramePermissions": [
+    "geolocation",
+    "microphone",
+    "camera"
+  ]
+}
