@@ -10,6 +10,7 @@ import BrowserFrame from './BrowserFrame';
 import { Page } from '../App';
 import FooterContent from './FooterContent';
 import DashboardWidgets from './DashboardWidgets';
+import TrendingSearches from './TrendingSearches';
 
 interface SearchPageProps {
   onNavigate: (page: Page) => void;
@@ -133,10 +134,20 @@ const SearchPage: React.FC<SearchPageProps> = ({ onNavigate }) => {
     handleSearch({ query: historyQuery });
   }, [handleSearch]);
 
+  const handleTrendingSearch = useCallback((trendingQuery: string) => {
+    setQuery(trendingQuery);
+    handleSearch({ query: trendingQuery, mode: 'web' });
+  }, [handleSearch]);
+
   return (
     <div className={`relative z-10 w-full flex flex-col items-center p-4 transition-all duration-700 ease-in-out min-h-screen pt-24 ${hasSearched ? 'justify-start' : 'justify-center'}`}>
         <div className={`w-full flex flex-col items-center transition-all duration-700 ${hasSearched ? 'mb-4' : 'mb-8'}`}>
-          {!hasSearched && <DashboardWidgets location={location} />}
+          {!hasSearched && (
+            <>
+              <DashboardWidgets location={location} />
+              <TrendingSearches onSearch={handleTrendingSearch} />
+            </>
+          )}
           <NajdiLogo isCompact={hasSearched} />
           <div className="w-full max-w-2xl">
             <SearchBar 

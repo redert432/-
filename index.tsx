@@ -15,3 +15,16 @@ root.render(
     <App />
   </React.StrictMode>
 );
+
+// Register Service Worker for PWA and offline capabilities
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => {
+        console.log('Najd Smart Service Worker registered: ', registration);
+      })
+      .catch(registrationError => {
+        console.log('Service Worker registration failed: ', registrationError);
+      });
+  });
+}

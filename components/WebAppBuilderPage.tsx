@@ -203,8 +203,15 @@ const WebAppBuilderPage: React.FC<WebAppBuilderPageProps> = ({ onNavigate, onSav
                         <code>{result[activeTab]}</code>
                     </pre>
                   </div>
-                  <div className="mt-2 text-xs text-slate-400 bg-slate-900/50 p-2 rounded">
-                    <p>💡 **للنشر:** بعد تنزيل ملف `index.html`، يمكنك رفعه إلى أي خدمة استضافة ثابتة مثل <a href="https://app.netlify.com/drop" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline">Netlify Drop</a> أو <a href="https://vercel.com/new" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline">Vercel</a> لنشره مجاناً.</p>
+                  <div className="mt-4 text-sm text-slate-400 bg-slate-900/50 p-4 rounded-lg border border-slate-700">
+                    <h4 className="font-bold text-cyan-400 text-base mb-2">🚀 كيفية نشر تطبيقك</h4>
+                    <p className="mb-2">رائع! لنشر تطبيقك على الإنترنت مجاناً:</p>
+                    <ol className="list-decimal list-inside space-y-1 text-slate-300">
+                        <li>انقر على زر <strong>"نشر"</strong> لتنزيل ملف <code>index.html</code>.</li>
+                        <li>اذهب إلى <a href="https://app.netlify.com/drop" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline">Netlify Drop</a>.</li>
+                        <li>اسحب وأفلت ملف <code>index.html</code> في الصفحة.</li>
+                        <li>هذا كل شيء! سيتم منحك رابطاً عاماً لتطبيقك.</li>
+                    </ol>
                   </div>
                 </div>
               </div>

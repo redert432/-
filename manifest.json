@@ -1,0 +1,21 @@
+{
+  "name": "نجد الذكية",
+  "short_name": "نجد",
+  "description": "منصة 'نجد الذكية' هي بوابتك المتكاملة للبحث والتواصل والأعمال، مدعومة بالذكاء الاصطناعي من Gemini ومصممة بروح سعودية عصرية.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#18100c",
+  "theme_color": "#18100c",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
