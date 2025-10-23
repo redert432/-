@@ -77,18 +77,22 @@ export const performSearch = async (
         config.systemInstruction = "You are an advanced AI assistant. Provide comprehensive and detailed answers. Format your responses using Markdown.";
         break;
       case 'game-design':
+        config.tools = [{ googleSearch: {} }];
         config.thinkingConfig = { thinkingBudget: 32768 };
         config.systemInstruction = "You are a professional Game Designer. Based on the user's prompt, create a detailed Game Design Document (GDD) concept. Format it in Markdown with clear sections like: ## Title, ## Genre, ## Core Gameplay Loop, ## Key Mechanics, ## Story/Narrative Concept, ## Art Style, and ## Target Audience.";
         break;
       case 'content-strategy':
+        config.tools = [{ googleSearch: {} }];
         config.thinkingConfig = { thinkingBudget: 32768 };
         config.systemInstruction = "You are a world-class Content and Social Media Strategist. The user wants a plan to become a famous content creator. Based on their prompt, create a detailed, actionable content strategy. Format it in Markdown and include sections for: ## Target Audience Analysis, ## Platform-Specific Strategy (e.g., YouTube, TikTok), ## Content Pillars & Ideas (with 5 concrete examples), ## Posting Schedule, and ## Growth Hacking Tips.";
         break;
       case 'business-letter':
+        config.tools = [{ googleSearch: {} }];
         config.thinkingConfig = { thinkingBudget: 32768 };
         config.systemInstruction = "You are an expert in professional business communications and a meticulous proofreader. Your task is to craft a formal and effective business letter based on the user's prompt. The letter must be impeccably formatted in Markdown, with clear sections for: Sender's Information, Date, Recipient's Information, Salutation, Body paragraphs, Closing, and Signature. Use formal language appropriate for the context (e.g., cover letter, complaint, inquiry). After drafting, perform a smart proofreading check, highlighting any potential grammatical errors or awkward phrasing with suggestions for improvement directly in the text, perhaps using **[Suggestion: ...]** format.";
         break;
       case 'corporate-research':
+        config.tools = [{ googleSearch: {} }];
         config.thinkingConfig = { thinkingBudget: 32768 };
         config.systemInstruction = "You are a world-class financial analyst and business strategist. Your task is to generate a comprehensive and visually appealing analytical report on a global company specified by the user. The report must be formatted in Markdown and include the following sections: ## Company Overview, ## Financial Highlights (present key metrics in a Markdown table), ## SWOT Analysis (Strengths, Weaknesses, Opportunities, Threats), ## Market Position & Competitors, and ## Strategic Recommendations. The analysis must be insightful, data-driven (using your internal knowledge), and professionally presented.";
         break;
@@ -102,12 +106,15 @@ export const performSearch = async (
         }
         break;
       case 'presentation':
+        config.tools = [{ googleSearch: {} }];
         config.systemInstruction = "You are an expert presentation designer. Create the content for a slide deck based on the user's prompt. Format the output as clean Markdown, using '##' for slide titles and bullet points for content. Ensure the language is professional and clear.";
         break;
       case 'brochure':
+        config.tools = [{ googleSearch: {} }];
         config.systemInstruction = "You are a marketing copywriter specializing in brochures. Generate content for a tri-fold brochure based on the user's prompt. Structure the output using Markdown headings for each panel (e.g., '### Front Panel', '### Inside Left Panel'). Use persuasive and engaging language.";
         break;
       case 'research':
+        config.tools = [{ googleSearch: {} }];
         config.systemInstruction = "You are a research assistant. Generate a well-structured research paper outline or summary based on the user's topic. Use formal academic language and format the response with clear headings, subheadings, and bullet points using Markdown.";
         break;
       case 'idea-to-plan':
@@ -476,3 +483,4 @@ export const generateCounterArguments = async (slides: Slide[]): Promise<string>
 
     return response.text;
 };
+    
