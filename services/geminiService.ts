@@ -49,7 +49,7 @@ export const performSearch = async (
   image?: { mimeType: string; data: string }
 ): Promise<SearchResult> => {
   try {
-    const isProModel = ['najd-ai', 'presentation', 'brochure', 'research', 'idea-to-plan', 'game-design', 'content-strategy', 'business-letter', 'corporate-research'].includes(mode);
+    const isProModel = ['idea-to-plan'].includes(mode);
     const model = isProModel ? 'gemini-2.5-pro' : (mode === 'image' ? 'gemini-2.5-flash-image' : 'gemini-2.5-flash');
     
     const config: {
@@ -65,7 +65,6 @@ export const performSearch = async (
     switch (mode) {
       case 'najd-ai':
         config.tools = [{ googleSearch: {} }];
-        config.thinkingConfig = { thinkingBudget: 32768 }; // Max budget for deep reasoning
         config.systemInstruction = "أنت 'نجد AI'، نموذج لغوي متطور وقوي من منصة 'نجد الذكية'. لقد تم تدريبك على مجموعة هائلة من البيانات، مما يمنحك قدرة استثنائية على فهم وتنسيق وتحليل المعلومات المعقدة، بالإضافة إلى توليد نصوص وصور عالية الجودة. مهمتك هي تقديم إجابات دقيقة، معمقة، ومبتكرة. استفد من البحث على الويب لضمان أن تكون معلوماتك محدثة دائمًا. عند طلب إنشاء جداول، قم بتنسيقها بشكل احترافي وواضح باستخدام Markdown. كن مبدعًا، دقيقًا، ومفيدًا في جميع استجاباتك.";
         break;
       case 'maps':
@@ -74,22 +73,18 @@ export const performSearch = async (
         break;
       case 'game-design':
         config.tools = [{ googleSearch: {} }];
-        config.thinkingConfig = { thinkingBudget: 32768 };
         config.systemInstruction = "You are a professional Game Designer. Based on the user's prompt, create a detailed Game Design Document (GDD) concept. Format it in Markdown with clear sections like: ## Title, ## Genre, ## Core Gameplay Loop, ## Key Mechanics, ## Story/Narrative Concept, ## Art Style, and ## Target Audience.";
         break;
       case 'content-strategy':
         config.tools = [{ googleSearch: {} }];
-        config.thinkingConfig = { thinkingBudget: 32768 };
         config.systemInstruction = "You are a world-class Content and Social Media Strategist. The user wants a plan to become a famous content creator. Based on their prompt, create a detailed, actionable content strategy. Format it in Markdown and include sections for: ## Target Audience Analysis, ## Platform-Specific Strategy (e.g., YouTube, TikTok), ## Content Pillars & Ideas (with 5 concrete examples), ## Posting Schedule, and ## Growth Hacking Tips.";
         break;
       case 'business-letter':
         config.tools = [{ googleSearch: {} }];
-        config.thinkingConfig = { thinkingBudget: 32768 };
         config.systemInstruction = "You are an expert in professional business communications and a meticulous proofreader. Your task is to craft a formal and effective business letter based on the user's prompt. The letter must be impeccably formatted in Markdown, with clear sections for: Sender's Information, Date, Recipient's Information, Salutation, Body paragraphs, Closing, and Signature. Use formal language appropriate for the context (e.g., cover letter, complaint, inquiry). After drafting, perform a smart proofreading check, highlighting any potential grammatical errors or awkward phrasing with suggestions for improvement directly in the text, perhaps using **[Suggestion: ...]** format.";
         break;
       case 'corporate-research':
         config.tools = [{ googleSearch: {} }];
-        config.thinkingConfig = { thinkingBudget: 32768 };
         config.systemInstruction = "You are a world-class financial analyst and business strategist. Your task is to generate a comprehensive and visually appealing analytical report on a global company specified by the user. The report must be formatted in Markdown and include the following sections: ## Company Overview, ## Financial Highlights (present key metrics in a Markdown table), ## SWOT Analysis (Strengths, Weaknesses, Opportunities, Threats), ## Market Position & Competitors, and ## Strategic Recommendations. The analysis must be insightful, data-driven (using your internal knowledge), and professionally presented.";
         break;
       case 'presentation':
