@@ -1,4 +1,5 @@
 
+
 const CACHE_NAME = 'najd-smart-cache-v3';
 // Essential files for the app shell to work offline
 const APP_SHELL_URLS = [
@@ -20,6 +21,7 @@ const APP_SHELL_URLS = [
   '/components/BlueWaves.tsx',
   '/components/BrowserFrame.tsx',
   '/components/BusinessPage.tsx',
+  '/components/BuildLogsPage.tsx',
   '/components/ChatMessage.tsx',
   '/components/ChatBubble.tsx',
   '/components/Clock.tsx',
@@ -36,9 +38,7 @@ const APP_SHELL_URLS = [
   '/components/LoadingSpinner.tsx',
   '/components/MeetingPage.tsx',
   '/components/ModernSky.tsx',
-  '/components/NajdiAiPage.tsx',
   '/components/NajdiConnectPage.tsx',
-  '/components/NajdiEmailPage.tsx',
   '/components/NajdiLogo.tsx',
   '/components/NajdiSpeedTestPage.tsx',
   '/components/PresentationBuilderPage.tsx',

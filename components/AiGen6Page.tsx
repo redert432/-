@@ -4,22 +4,9 @@ import DarkWaves from './DarkWaves';
 import PulsingStars from './PulsingStars';
 import useParallax from '../hooks/useParallax';
 import ChatMessage from './ChatMessage';
-import { Source } from '../types';
+import { Source, AiChatMessage } from '../types';
 import { GoogleGenAI, GenerateContentResponse, Part, Content } from '@google/genai';
 import { getWeatherFunctionDeclaration } from '../services/geminiTools';
-
-// Re-defining the interface as it's not exported from ChatMessage.tsx
-interface Message {
-    id: string;
-    sender: 'user' | 'ai';
-    text: string;
-    imageUrl?: string;
-    videoUrl?: string;
-    sources?: Source[];
-    weather?: { location: string; temperature: string; forecast: string; icon: string; };
-    isThinking?: boolean;
-    loadingMessage?: string;
-}
 
 interface AiGen6PageProps {
   onNavigate: (page: Page) => void;
@@ -31,7 +18,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 
 const AiGen6Page: React.FC<AiGen6PageProps> = ({ onNavigate }) => {
     const [activeTask, setActiveTask] = useState<AiGen6Task>('chat');
-    const [messages, setMessages] = useState<Message[]>([
+    const [messages, setMessages] = useState<AiChatMessage[]>([
         { id: 'initial', sender: 'ai', text: 'أهلاً بك في AI Gen 6. كيف يمكنني مساعدتك اليوم؟ جرّب أن تسأل عن الطقس!', isThinking: false }
     ]);
     const [input, setInput] = useState('');
@@ -63,7 +50,7 @@ const AiGen6Page: React.FC<AiGen6PageProps> = ({ onNavigate }) => {
         if (!input.trim() || isLoading) return;
 
         const currentInput = input;
-        const userMessage: Message = { id: Date.now().toString(), sender: 'user', text: currentInput };
+        const userMessage: AiChatMessage = { id: Date.now().toString(), sender: 'user', text: currentInput };
         setMessages(prev => [...prev, userMessage]);
         setInput('');
         setIsLoading(true);
@@ -82,7 +69,7 @@ const AiGen6Page: React.FC<AiGen6PageProps> = ({ onNavigate }) => {
                 
                 const response = await ai.models.generateContent({ model, contents, config });
                 const text = response.text;
-                const aiMessage: Message = { id: Date.now().toString(), sender: 'ai', text };
+                const aiMessage: AiChatMessage = { id: Date.now().toString(), sender: 'ai', text };
                 chatHistoryRef.current.push(userContent, { role: 'model', parts: [{ text }] });
                 setMessages(prev => [...prev.filter(m => m.id !== 'thinking'), aiMessage]);
             } else { // 'chat' task
@@ -131,7 +118,7 @@ const AiGen6Page: React.FC<AiGen6PageProps> = ({ onNavigate }) => {
                         });
                         
                         const finalResponse = result2;
-                        const aiMessage: Message = {
+                        const aiMessage: AiChatMessage = {
                             id: Date.now().toString() + '-weather',
                             sender: 'ai',
                             text: finalResponse.text,
@@ -143,14 +130,14 @@ const AiGen6Page: React.FC<AiGen6PageProps> = ({ onNavigate }) => {
                     }
                 } else {
                     const text = response.text;
-                    const aiMessage: Message = { id: Date.now().toString(), sender: 'ai', text: text };
+                    const aiMessage: AiChatMessage = { id: Date.now().toString(), sender: 'ai', text: text };
                     chatHistoryRef.current.push(userContent, { role: 'model', parts: [{ text: text }] });
                     setMessages(prev => [...prev.filter(m => m.id !== 'thinking'), aiMessage]);
                 }
             }
         } catch (err) {
             console.error(err);
-            const errorMessage: Message = {
+            const errorMessage: AiChatMessage = {
                 id: 'error',
                 sender: 'ai',
                 text: 'عفواً، حدث خطأ أثناء معالجة طلبك. يرجى المحاولة مرة أخرى.'
@@ -174,7 +161,7 @@ const AiGen6Page: React.FC<AiGen6PageProps> = ({ onNavigate }) => {
                     <button 
                         onClick={() => handleTaskSwitch('chat')} 
                         disabled={isLoading}
-                        className={`px-4 py-2 text-sm rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${activeTask === 'chat' ? 'bg-cyan-500 text-slate-900 font-bold' : 'text-slate-300 hover:bg-slate-700'}`}
+                        className={`px-4 py-2 text-sm rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${activeTask === 'chat' ? 'animated-cyan-gradient text-white font-bold' : 'text-slate-300 hover:bg-slate-700'}`}
                     >
                       <span className="flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" /><path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h1a2 2 0 002-2V9a2 2 0 00-2-2h-1z" /></svg>
@@ -184,7 +171,7 @@ const AiGen6Page: React.FC<AiGen6PageProps> = ({ onNavigate }) => {
                     <button 
                         onClick={() => handleTaskSwitch('novelist')} 
                         disabled={isLoading}
-                        className={`px-4 py-2 text-sm rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${activeTask === 'novelist' ? 'bg-cyan-500 text-slate-900 font-bold' : 'text-slate-300 hover:bg-slate-700'}`}
+                        className={`px-4 py-2 text-sm rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${activeTask === 'novelist' ? 'animated-cyan-gradient text-white font-bold' : 'text-slate-300 hover:bg-slate-700'}`}
                     >
                       <span className="flex items-center gap-2">
                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 16c1.255 0 2.443-.29 3.5-.804V4.804zM14.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 0114.5 16c1.255 0 2.443-.29 3.5-.804v-10A7.968 7.968 0 0014.5 4z" /></svg>

@@ -57,7 +57,7 @@ const BusinessPage: React.FC<BusinessPageProps> = ({ onNavigate, onSaveToProject
     setCurrentTask(`جاري إنشاء: ${title}...`);
 
     try {
-      const result = await performSearch(prompt, 'thinking');
+      const result = await performSearch(prompt, 'najd-ai');
       setGeneratedContent({ title, content: result.text });
       
       const newDoc: BusinessDocument = {

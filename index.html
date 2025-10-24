@@ -255,6 +255,40 @@
     .bg-gradient-blue-purple-interactive {
         background-image: linear-gradient(-45deg, rgb(22, 18, 48), rgb(55, 48, 107), rgb(139, 92, 246), rgb(22, 18, 48));
     }
+
+    /* --- ANIMATED SELECTION STYLES --- */
+    @keyframes animated-border-color {
+      0% { border-color: rgb(var(--color-border)); }
+      50% { border-color: rgb(var(--color-ring)); }
+      100% { border-color: rgb(var(--color-border)); }
+    }
+    .animated-active-border {
+        animation: animated-border-color 3s ease-infinite;
+    }
+
+    .animated-active-gradient {
+        background-size: 200% 200%;
+        animation: animated-gradient 5s ease-infinite;
+        color: rgb(var(--color-text-on-accent)) !important;
+    }
+    [data-theme="default"] .animated-active-gradient,
+    [data-theme="classic"] .animated-active-gradient,
+    [data-theme="modern"] .animated-active-gradient,
+    [data-theme="dark"] .animated-active-gradient {
+        background-image: linear-gradient(-45deg, rgb(var(--color-border)), rgb(var(--color-ring)), rgb(var(--color-border)));
+    }
+    [data-theme="interactive-dark"] .animated-active-gradient {
+         background-image: linear-gradient(-45deg, var(--glow-color1), var(--glow-color2), var(--glow-color1));
+    }
+    [data-theme="blue-purple-interactive"] .animated-active-gradient {
+         background-image: linear-gradient(-45deg, var(--glow-color1), var(--glow-color2), var(--glow-color1));
+    }
+    .animated-cyan-gradient {
+        background-size: 200% 200%;
+        animation: animated-gradient 5s ease-infinite;
+        background-image: linear-gradient(-45deg, #0891b2, #22d3ee, #0891b2);
+        color: white !important;
+    }
   </style>
   <script type="importmap">
   {
@@ -268,108 +302,7 @@
   </script>
 </head>
 <body class="bg-[rgb(var(--color-bg-main))]">
-  <div id="root">
-    <div data-theme="default" class="relative min-h-screen w-full text-[rgb(var(--color-text-main))] animated-background bg-gradient-default">
-      <header class="absolute top-0 left-0 w-full p-4 z-20">
-        <nav class="flex items-center justify-between">
-          <button class="focus:outline-none focus:ring-2 focus:ring-[rgb(var(--color-ring))] rounded-md p-1">
-            <div class="flex items-baseline gap-2">
-              <span class="themed-glow font-bold text-[rgb(var(--color-text-main))] text-xl" style="letter-spacing: 0.05em;">
-                نجد <span class="font-normal opacity-80">الذكية</span>
-              </span>
-              <span class="text-sm font-mono text-[rgb(var(--color-text-muted))] tracking-widest opacity-70">najd smart</span>
-            </div>
-          </button>
-          <div class="flex items-center space-x-4 space-x-reverse">
-            <a href="#" class="text-sm text-[rgba(var(--color-text-main),0.9)] hover:underline">بريد نجد</a>
-            <button class="w-9 h-9 rounded-full bg-[rgb(var(--color-bg-muted))] hover:bg-[rgb(var(--color-bg-muted-hover))] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[rgb(var(--color-ring))]" aria-label="تغيير النمط">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[rgb(var(--color-text-main))]" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M10 3.5a1.5 1.5 0 011.06.44l6.25 6.25a1.5 1.5 0 010 2.12l-2.88 2.88a1.5 1.5 0 01-2.12 0l-1.06-1.06-4.88-4.88a1.5 1.5 0 010-2.12l1.06-1.06a1.5 1.5 0 012.12 0L10 5.56l1.06-1.06a1.5 1.5 0 012.12 0l.71.71-5.66 5.66-2.12-2.12 4.24-4.24-.71-.71A1.5 1.5 0 0110 3.5zM2 10a8 8 0 1116 0 8 8 0 01-16 0z"></path>
-              </svg>
-            </button>
-            <button class="w-9 h-9 rounded-full bg-[rgb(var(--color-bg-muted))] hover:bg-[rgb(var(--color-bg-muted-hover))] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[rgb(var(--color-ring))]" aria-label="إدارة الحسابات">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[rgb(var(--color-text-on-accent))]" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-              </svg>
-            </button>
-          </div>
-        </nav>
-      </header>
-      <div class="absolute top-[-5%] left-[-5%] w-[110%] h-[110%] z-0 transition-transform duration-300 ease-out">
-        <canvas class="absolute top-0 left-0 w-full h-full z-0 opacity-50"></canvas>
-        <div class="absolute bottom-0 left-0 w-full h-1/5 bg-gradient-to-t from-[rgba(var(--color-text-accent-strong),0.5)] to-transparent"></div>
-        <svg class="absolute bottom-0 left-0 w-full h-8 opacity-30" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20" preserveAspectRatio="none">
-          <defs>
-            <pattern id="sadu" patternUnits="userSpaceOnUse" width="20" height="20">
-              <g class="fill-current text-[rgba(var(--color-border),0.5)]">
-                <path d="M0 0 H20 V20 H0 Z" fill-opacity="0.1" class="text-[rgb(var(--color-text-main))]"></path>
-                <path d="M5 0 L10 5 L5 10 L0 5 Z"></path>
-                <path d="M15 0 L20 5 L15 10 L10 5 Z"></path>
-                <path d="M5 10 L10 15 L5 20 L0 15 Z"></path>
-                <path d="M15 10 L20 15 L15 20 L10 15 Z"></path>
-              </g>
-            </pattern>
-          </defs>
-          <rect width="100" height="20" fill="url(#sadu)"></rect>
-        </svg>
-      </div>
-      <main class="relative z-10 w-full flex flex-col items-center justify-center min-h-screen px-4 py-24 slide-down-fade-in">
-        <div class="text-center">
-          <div class="flex flex-col items-center justify-center transition-all duration-500 ease-in-out mb-8">
-            <div class="flex flex-col items-center">
-              <span class="themed-glow font-bold text-[rgb(var(--color-text-main))] transition-all duration-500 text-6xl" style="letter-spacing: 0.05em;">
-                نجد <span class="font-normal opacity-80">الذكية</span>
-              </span>
-              <span class="font-mono text-[rgb(var(--color-text-muted))] tracking-widest transition-all duration-500 text-base mt-2">
-                najd smart
-              </span>
-            </div>
-          </div>
-          <h1 class="text-4xl md:text-5xl font-bold text-[rgb(var(--color-text-main))] mt-4">
-            أهلاً بك في منصة نجد الذكية
-          </h1>
-          <p class="mt-4 text-lg text-[rgb(var(--color-text-muted))] max-w-2xl mx-auto">
-            اكتشف عالماً من المعرفة بقوة الذكاء الاصطناعي، مصمماً بروح سعودية عصرية.
-          </p>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mt-12">
-          <div class="bg-[rgba(var(--color-bg-content),0.8)] border border-[rgba(var(--color-border),0.2)] p-6 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[rgb(var(--color-border))]">
-            <div class="flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-[rgba(var(--color-border),0.1)] text-[rgb(var(--color-text-accent))]">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-            </div>
-            <h3 class="mb-2 text-xl font-bold text-[rgb(var(--color-text-content))]">بحث ذكي</h3>
-            <p class="text-[rgb(var(--color-text-content-muted))]">استخدم أحدث نماذج الذكاء الاصطناعي للحصول على إجابات دقيقة ومدعومة بالمصادر.</p>
-          </div>
-          <div class="bg-[rgba(var(--color-bg-content),0.8)] border border-[rgba(var(--color-border),0.2)] p-6 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[rgb(var(--color-border))]">
-            <div class="flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-[rgba(var(--color-border),0.1)] text-[rgb(var(--color-text-accent))]">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z"></path><path d="M5.5 4.5A2.5 2.5 0 018 2h4a2.5 2.5 0 012.5 2.5v6A2.5 2.5 0 0112 13H8a2.5 2.5 0 01-2.5-2.5v-6zM14 10a1 1 0 00-1-1H7a1 1 0 100 2h6a1 1 0 001-1z"></path></svg>
-            </div>
-            <h3 class="mb-2 text-xl font-bold text-[rgb(var(--color-text-content))]">محادثة مباشرة</h3>
-            <p class="text-[rgb(var(--color-text-content-muted))]">تحدث مع الذكاء الاصطناعي مباشرةً واستمع إلى الردود الصوتية الفورية.</p>
-          </div>
-          <div class="bg-[rgba(var(--color-bg-content),0.8)] border border-[rgba(var(--color-border),0.2)] p-6 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[rgb(var(--color-border))]">
-            <div class="flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-[rgba(var(--color-border),0.1)] text-[rgb(var(--color-text-accent))]">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM10 11a2 2 0 100-4 2 2 0 000 4z"></path></svg>
-            </div>
-            <h3 class="mb-2 text-xl font-bold text-[rgb(var(--color-text-content))]">خرائط نجد</h3>
-            <p class="text-[rgb(var(--color-text-content-muted))]">ابحث عن الأماكن والمعالم بسهولة مع خرائطنا المخصصة للمنطقة.</p>
-          </div>
-          <div class="bg-[rgba(var(--color-bg-content),0.8)] border border-[rgba(var(--color-border),0.2)] p-6 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[rgb(var(--color-border))]">
-            <div class="flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-[rgba(var(--color-border),0.1)] text-[rgb(var(--color-text-accent))]">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.414L11 10.586V6z" clip-rule="evenodd"></path></svg>
-            </div>
-            <h3 class="mb-2 text-xl font-bold text-[rgb(var(--color-text-content))]">أدوات متقدمة</h3>
-            <p class="text-[rgb(var(--color-text-content-muted))]">قِس سرعة اتصالك بالإنترنت وحوّل النصوص إلى كلام مسموع والمزيد.</p>
-          </div>
-        </div>
-        <div class="mt-12">
-          <button class="px-12 py-4 bg-[rgb(var(--color-bg-accent-primary))] text-[rgb(var(--color-text-on-accent))] text-xl rounded-full hover:bg-[rgb(var(--color-bg-accent-primary-hover))] focus:outline-none focus:ring-4 focus:ring-[rgba(var(--color-ring),0.5)] transition-all duration-300 transform hover:scale-105 shadow-lg">
-            ابدأ البحث الآن
-          </button>
-        </div>
-      </main>
-    </div>
-  </div>
+  <div id="root"></div>
   <script type="module" src="index.tsx"></script>
 </body>
 </html>

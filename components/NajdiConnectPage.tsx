@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { UserAccount, Contact, ChatMessage, ProjectFile } from '../types';
+import { UserAccount, Contact, ConnectChatMessage, ProjectFile } from '../types';
 import NajdiLogo from './NajdiLogo';
 import { Page } from '../App';
 
@@ -9,9 +9,12 @@ interface NajdiConnectPageProps {
   onLogin: (account: UserAccount, password?: string) => void;
   projectFiles: ProjectFile[];
   onNavigate: (page: Page, options?: any) => void;
+  messages: { [key: string]: ConnectChatMessage[] };
+  onSendMessage: (chatPartnerEmail: string, message: ConnectChatMessage) => void;
+  onAddContact: (contactEmail: string) => boolean;
 }
 
-const NajdiConnectPage: React.FC<NajdiConnectPageProps> = ({ userAccount, onLogin, projectFiles, onNavigate }) => {
+const NajdiConnectPage: React.FC<NajdiConnectPageProps> = ({ userAccount, onLogin, projectFiles, onNavigate, messages, onSendMessage, onAddContact }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -19,8 +22,6 @@ const NajdiConnectPage: React.FC<NajdiConnectPageProps> = ({ userAccount, onLogi
   
   // Chat state
   const [activeChat, setActiveChat] = useState<string | null>(null);
-  const [messages, setMessages] = useState<{ [key: string]: ChatMessage[] }>({});
-  const [allUsers, setAllUsers] = useState<UserAccount[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isAttachmentModalOpen, setIsAttachmentModalOpen] = useState(false);
   const [isAddContactModalOpen, setIsAddContactModalOpen] = useState(false);
@@ -39,35 +40,11 @@ const NajdiConnectPage: React.FC<NajdiConnectPageProps> = ({ userAccount, onLogi
   };
 
   useEffect(() => {
-    // Load all users for contact search
-    const allUsersRaw = localStorage.getItem('najdiAllUsers');
-    setAllUsers(allUsersRaw ? JSON.parse(allUsersRaw) : []);
-
-    // Load all messages
-    const allMessagesRaw = localStorage.getItem('najdiAllMessages');
-    setMessages(allMessagesRaw ? JSON.parse(allMessagesRaw) : {});
-    
     if (userAccount && !activeChat) {
       // Default to self-chat if no other chat is active
       setActiveChat(userAccount.email);
     }
-    
-    const handleStorageChange = (event: StorageEvent) => {
-        if (event.key === 'najdiAllMessages' && event.newValue) {
-            setMessages(JSON.parse(event.newValue));
-        }
-        if (event.key === 'najdiUserAccount' && event.newValue) {
-            const updatedAccount = JSON.parse(event.newValue);
-            if (updatedAccount.email === userAccount?.email) {
-                onLogin(updatedAccount); 
-            }
-        }
-    };
-    window.addEventListener('storage', handleStorageChange);
-    return () => {
-        window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [userAccount, activeChat, onLogin]);
+  }, [userAccount, activeChat]);
 
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,23 +68,12 @@ const NajdiConnectPage: React.FC<NajdiConnectPageProps> = ({ userAccount, onLogi
   };
 
   const handleConfirmAddContact = () => {
-    if (newContactEmail && userAccount && newContactEmail !== userAccount.email) {
-        if (allUsers.some(u => u.email === newContactEmail)) {
-            if (!(userAccount.contacts || []).some(c => c.email === newContactEmail)) {
-                const updatedAccount = {
-                    ...userAccount,
-                    contacts: [...(userAccount.contacts || []), { email: newContactEmail }]
-                };
-                localStorage.setItem('najdiUserAccount', JSON.stringify(updatedAccount));
-                onLogin(updatedAccount);
-                setActiveChat(newContactEmail);
-                setIsAddContactModalOpen(false);
-                setNewContactEmail('');
-            } else {
-                alert('جهة الاتصال موجودة بالفعل.');
-            }
-        } else {
-            alert('المستخدم غير موجود. تأكد من أن البريد الإلكتروني صحيح ومسجل في نجد الذكية.');
+    if (newContactEmail && userAccount) {
+        const success = onAddContact(newContactEmail);
+        if (success) {
+            setActiveChat(newContactEmail);
+            setIsAddContactModalOpen(false);
+            setNewContactEmail('');
         }
     } else {
         alert('البريد الإلكتروني غير صالح.');
@@ -118,7 +84,7 @@ const NajdiConnectPage: React.FC<NajdiConnectPageProps> = ({ userAccount, onLogi
       if (!activeChat || !userAccount) return;
       if (!newMessage.trim() && !file) return;
 
-      const message: ChatMessage = file ? {
+      const message: ConnectChatMessage = file ? {
           id: Date.now().toString(),
           sender: 'me',
           type: 'file',
@@ -132,18 +98,8 @@ const NajdiConnectPage: React.FC<NajdiConnectPageProps> = ({ userAccount, onLogi
           content: newMessage,
           timestamp: new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit'})
       };
-
-      const chatKey = getChatKey(userAccount.email, activeChat);
-      const allMessagesRaw = localStorage.getItem('najdiAllMessages');
-      const allMessages = allMessagesRaw ? JSON.parse(allMessagesRaw) : {};
       
-      if (!allMessages[chatKey]) {
-          allMessages[chatKey] = [];
-      }
-      allMessages[chatKey].push(message);
-
-      localStorage.setItem('najdiAllMessages', JSON.stringify(allMessages));
-      setMessages(allMessages);
+      onSendMessage(activeChat, message);
       setNewMessage('');
       setIsAttachmentModalOpen(false);
   };
@@ -238,7 +194,8 @@ const NajdiConnectPage: React.FC<NajdiConnectPageProps> = ({ userAccount, onLogi
                 </div>
                 <div className="flex-1 overflow-y-auto">
                     {/* Self-chat button */}
-                    <button onClick={() => setActiveChat(userAccount.email)} className={`w-full text-right p-4 flex items-center gap-3 transition-colors ${activeChat === userAccount.email ? 'bg-[rgba(var(--color-border),0.1)]' : 'hover:bg-slate-100'}`}>
+                    <button onClick={() => setActiveChat(userAccount.email)} className={`w-full text-right p-4 flex items-center gap-3 transition-colors relative ${activeChat === userAccount.email ? 'bg-[rgba(var(--color-border),0.1)]' : 'hover:bg-slate-100'}`}>
+                        {activeChat === userAccount.email && <div className="absolute right-0 top-0 h-full w-1 animated-active-gradient"></div>}
                         <div className="w-10 h-10 rounded-full bg-slate-300 flex items-center justify-center">
                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-500" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm2 0v12h6V4H7z" /><path d="M12 4h2a2 2 0 012 2v8a2 2 0 01-2 2h-2V4z" /></svg>
                         </div>
@@ -248,7 +205,8 @@ const NajdiConnectPage: React.FC<NajdiConnectPageProps> = ({ userAccount, onLogi
                         </div>
                     </button>
                     {contacts.map(contact => (
-                        <button key={contact.email} onClick={() => setActiveChat(contact.email)} className={`w-full text-right p-4 flex items-center gap-3 transition-colors ${activeChat === contact.email ? 'bg-[rgba(var(--color-border),0.1)]' : 'hover:bg-slate-100'}`}>
+                        <button key={contact.email} onClick={() => setActiveChat(contact.email)} className={`w-full text-right p-4 flex items-center gap-3 transition-colors relative ${activeChat === contact.email ? 'bg-[rgba(var(--color-border),0.1)]' : 'hover:bg-slate-100'}`}>
+                            {activeChat === contact.email && <div className="absolute right-0 top-0 h-full w-1 animated-active-gradient"></div>}
                             <div className="w-10 h-10 rounded-full bg-slate-300 flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-500" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>
                             </div>

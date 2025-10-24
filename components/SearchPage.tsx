@@ -18,7 +18,7 @@ interface SearchPageProps {
 
 const SearchPage: React.FC<SearchPageProps> = ({ onNavigate }) => {
   const [query, setQuery] = useState('');
-  const [searchMode, setSearchMode] = useState<SearchMode>('web');
+  const [searchMode, setSearchMode] = useState<SearchMode>('najd-ai');
   const [isLoading, setIsLoading] = useState(false);
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -116,7 +116,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ onNavigate }) => {
       if (actionId === 'trending') {
         const trendingQuery = "ما هي أهم المواضيع الرائجة حاليًا على بحث جوجل في السعودية؟";
         setQuery(trendingQuery);
-        handleSearch({ query: trendingQuery, mode: 'web' });
+        handleSearch({ query: trendingQuery, mode: 'najd-ai' });
       }
   }, [handleSearch]);
 
@@ -136,7 +136,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ onNavigate }) => {
 
   const handleTrendingSearch = useCallback((trendingQuery: string) => {
     setQuery(trendingQuery);
-    handleSearch({ query: trendingQuery, mode: 'web' });
+    handleSearch({ query: trendingQuery, mode: 'najd-ai' });
   }, [handleSearch]);
 
   return (

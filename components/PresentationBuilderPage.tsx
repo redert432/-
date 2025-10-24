@@ -1,4 +1,5 @@
 
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { Page } from '../App';
 import { ProjectFile, Slide } from '../types';
@@ -120,7 +121,7 @@ const PresentationBuilderPage: React.FC<PresentationBuilderPageProps> = ({ onNav
                 <button
                   key={slide.id}
                   onClick={() => setActiveSlideId(slide.id)}
-                  className={`w-full p-2 rounded-lg text-right border-2 ${activeSlideId === slide.id ? 'border-[rgb(var(--color-ring))] bg-amber-50' : 'border-transparent bg-white hover:border-slate-300'}`}
+                  className={`w-full p-2 rounded-lg text-right border-2 ${activeSlideId === slide.id ? 'bg-amber-50 animated-active-border' : 'border-transparent bg-white hover:border-slate-300'}`}
                 >
                   <span className="text-xs text-slate-500">شريحة {index + 1}</span>
                   <p className="font-semibold text-slate-800 truncate">{slide.title}</p>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -8,9 +7,9 @@ if (!rootElement) {
   throw new Error("Could not find root element to mount to");
 }
 
-// Use hydrateRoot to attach React to the existing server-rendered/static HTML.
-ReactDOM.hydrateRoot(
-  rootElement,
+// Use createRoot for client-side rendering.
+const root = ReactDOM.createRoot(rootElement);
+root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>

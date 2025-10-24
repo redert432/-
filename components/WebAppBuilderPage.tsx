@@ -6,6 +6,7 @@ import { ProjectFile } from '../types';
 interface WebAppBuilderPageProps {
   onNavigate: (page: Page) => void;
   onSaveToProjectSpace: (file: Omit<ProjectFile, 'id' | 'createdAt'>) => boolean;
+  onDeploy: (projectName: string) => void;
 }
 
 type CodeTab = 'html' | 'css' | 'js';
@@ -16,7 +17,7 @@ const MODELS: { id: WebAppModel; label: string; description: string }[] = [
   { id: 'solid-sonic', label: 'Solid Sonic', description: 'نموذج سريع للمهام البسيطة والتطبيقات الأولية.' }
 ];
 
-const WebAppBuilderPage: React.FC<WebAppBuilderPageProps> = ({ onNavigate, onSaveToProjectSpace }) => {
+const WebAppBuilderPage: React.FC<WebAppBuilderPageProps> = ({ onNavigate, onSaveToProjectSpace, onDeploy }) => {
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +66,7 @@ const WebAppBuilderPage: React.FC<WebAppBuilderPageProps> = ({ onNavigate, onSav
     `;
   };
   
-  const handlePublish = () => {
+  const handleDownload = () => {
     if (!result) return;
     const fullHtml = createFullHtml();
     const blob = new Blob([fullHtml], { type: 'text/html' });
@@ -92,6 +93,12 @@ const WebAppBuilderPage: React.FC<WebAppBuilderPageProps> = ({ onNavigate, onSav
       alert('تم حفظ التطبيق بنجاح في مساحة المشاريع!');
     }
   };
+
+  const handleDeploy = () => {
+      if (!result || !prompt) return;
+      const projectName = prompt.substring(0, 30).replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() || 'untitled-app';
+      onDeploy(projectName);
+  }
 
   const srcDoc = result ? `<html><head><style>${result.css}</style></head><body>${result.html}<script>${result.js}</script></body></html>` : '';
 
@@ -127,7 +134,7 @@ const WebAppBuilderPage: React.FC<WebAppBuilderPageProps> = ({ onNavigate, onSav
                   disabled={isLoading}
                   className={`px-4 py-2 text-sm font-semibold rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                     selectedModel === model.id
-                      ? 'bg-cyan-500 text-slate-900'
+                      ? 'animated-cyan-gradient text-white'
                       : 'text-slate-300 hover:bg-slate-700'
                   }`}
                 >
@@ -179,18 +186,18 @@ const WebAppBuilderPage: React.FC<WebAppBuilderPageProps> = ({ onNavigate, onSav
                 <div className="flex flex-col bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                   <div className="flex justify-between items-center mb-3">
                     <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-lg">
-                      <button onClick={() => setActiveTab('html')} className={`px-3 py-1 text-sm rounded ${activeTab === 'html' ? 'bg-cyan-500 text-slate-900' : 'hover:bg-slate-700'}`}>HTML</button>
-                      <button onClick={() => setActiveTab('css')} className={`px-3 py-1 text-sm rounded ${activeTab === 'css' ? 'bg-cyan-500 text-slate-900' : 'hover:bg-slate-700'}`}>CSS</button>
-                      <button onClick={() => setActiveTab('js')} className={`px-3 py-1 text-sm rounded ${activeTab === 'js' ? 'bg-cyan-500 text-slate-900' : 'hover:bg-slate-700'}`}>JS</button>
+                      <button onClick={() => setActiveTab('html')} className={`px-3 py-1 text-sm rounded ${activeTab === 'html' ? 'animated-cyan-gradient text-white' : 'hover:bg-slate-700'}`}>HTML</button>
+                      <button onClick={() => setActiveTab('css')} className={`px-3 py-1 text-sm rounded ${activeTab === 'css' ? 'animated-cyan-gradient text-white' : 'hover:bg-slate-700'}`}>CSS</button>
+                      <button onClick={() => setActiveTab('js')} className={`px-3 py-1 text-sm rounded ${activeTab === 'js' ? 'animated-cyan-gradient text-white' : 'hover:bg-slate-700'}`}>JS</button>
                     </div>
                      <div className="flex items-center gap-2">
                         <button onClick={handleSaveToProjectSpace} className="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg flex items-center gap-2" title="حفظ في مساحة المشاريع">
                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /><path d="M5 11a1 1 0 00-1 1v2a1 1 0 001 1h10a1 1 0 001-1v-2a1 1 0 00-1-1H5z" /></svg>
                            حفظ
                         </button>
-                        <button onClick={handlePublish} className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 text-slate-900 font-bold rounded-lg flex items-center gap-2" title="تنزيل كملف HTML">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 16a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 16h-8z" /><path d="M9 13l-2-2 1.41-1.41L9 10.18l3.59-3.59L14 8l-5 5z" /></svg>
-                            نشر
+                        <button onClick={handleDownload} className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 text-slate-900 font-bold rounded-lg flex items-center gap-2" title="تنزيل كملف HTML">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 16a3.5 3.5% 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 16h-8z" /><path d="M9 13l-2-2 1.41-1.41L9 10.18l3.59-3.59L14 8l-5 5z" /></svg>
+                            تنزيل HTML
                         </button>
                         <button onClick={handleCopyCode} className="px-3 py-2 text-sm bg-slate-700 hover:bg-slate-600 rounded-lg flex items-center gap-2" title="نسخ الكود">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2-2H9a2 2 0 01-2-2V9z" /><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2H4z" /></svg>
@@ -204,14 +211,10 @@ const WebAppBuilderPage: React.FC<WebAppBuilderPageProps> = ({ onNavigate, onSav
                     </pre>
                   </div>
                   <div className="mt-4 text-sm text-slate-400 bg-slate-900/50 p-4 rounded-lg border border-slate-700">
-                    <h4 className="font-bold text-cyan-400 text-base mb-2">🚀 كيفية نشر تطبيقك</h4>
-                    <p className="mb-2">رائع! لنشر تطبيقك على الإنترنت مجاناً:</p>
-                    <ol className="list-decimal list-inside space-y-1 text-slate-300">
-                        <li>انقر على زر <strong>"نشر"</strong> لتنزيل ملف <code>index.html</code>.</li>
-                        <li>اذهب إلى <a href="https://app.netlify.com/drop" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline">Netlify Drop</a>.</li>
-                        <li>اسحب وأفلت ملف <code>index.html</code> في الصفحة.</li>
-                        <li>هذا كل شيء! سيتم منحك رابطاً عاماً لتطبيقك.</li>
-                    </ol>
+                    <h4 className="font-bold text-cyan-400 text-base mb-2">🚀 نشر تطبيقك</h4>
+                    <button onClick={handleDeploy} className="w-full p-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white font-bold rounded-lg hover:opacity-90 transition-opacity">
+                        النشر على سحابة نجد الذكية (محاكاة)
+                    </button>
                   </div>
                 </div>
               </div>

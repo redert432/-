@@ -3,17 +3,13 @@ import { GoogleGenAI, GroundingChunk, Modality, Part, GenerateVideosOperation, T
 import { SearchResult, Source, MapSource, Slide } from '../types';
 
 export type SearchMode = 
-  | 'web' 
+  | 'najd-ai'
   | 'maps' 
-  | 'thinking' 
   | 'image' 
-  | 'gpt-5' 
-  | 'solid-sonic'
   | 'presentation'
   | 'brochure'
   | 'research'
   | 'idea-to-plan'
-  | 'flash-lite'
   | 'game-design'
   | 'content-strategy'
   | 'business-letter'
@@ -53,8 +49,8 @@ export const performSearch = async (
   image?: { mimeType: string; data: string }
 ): Promise<SearchResult> => {
   try {
-    const isProModel = ['gpt-5', 'presentation', 'brochure', 'research', 'idea-to-plan', 'game-design', 'content-strategy', 'business-letter', 'corporate-research'].includes(mode);
-    const model = isProModel ? 'gemini-2.5-pro' : (mode === 'image' ? 'gemini-2.5-flash-image' : (mode === 'flash-lite' ? 'gemini-flash-lite-latest' : 'gemini-2.5-flash'));
+    const isProModel = ['najd-ai', 'presentation', 'brochure', 'research', 'idea-to-plan', 'game-design', 'content-strategy', 'business-letter', 'corporate-research'].includes(mode);
+    const model = isProModel ? 'gemini-2.5-pro' : (mode === 'image' ? 'gemini-2.5-flash-image' : 'gemini-2.5-flash');
     
     const config: {
       tools?: ({ googleSearch: {} } | { googleMaps: {} })[];
@@ -67,14 +63,14 @@ export const performSearch = async (
     let contents: any = query;
 
     switch (mode) {
-      case 'web': config.tools = [{ googleSearch: {} }]; break;
+      case 'najd-ai':
+        config.tools = [{ googleSearch: {} }];
+        config.thinkingConfig = { thinkingBudget: 32768 }; // Max budget for deep reasoning
+        config.systemInstruction = "أنت 'نجد AI'، نموذج لغوي متطور وقوي من منصة 'نجد الذكية'. لقد تم تدريبك على مجموعة هائلة من البيانات، مما يمنحك قدرة استثنائية على فهم وتنسيق وتحليل المعلومات المعقدة، بالإضافة إلى توليد نصوص وصور عالية الجودة. مهمتك هي تقديم إجابات دقيقة، معمقة، ومبتكرة. استفد من البحث على الويب لضمان أن تكون معلوماتك محدثة دائمًا. عند طلب إنشاء جداول، قم بتنسيقها بشكل احترافي وواضح باستخدام Markdown. كن مبدعًا، دقيقًا، ومفيدًا في جميع استجاباتك.";
+        break;
       case 'maps':
         config.tools = [{ googleMaps: {} }];
         if (location) config.toolConfig = { retrievalConfig: { latLng: location } };
-        break;
-      case 'gpt-5':
-        config.tools = [{ googleSearch: {} }];
-        config.systemInstruction = "You are an advanced AI assistant. Provide comprehensive and detailed answers. Format your responses using Markdown.";
         break;
       case 'game-design':
         config.tools = [{ googleSearch: {} }];
@@ -95,15 +91,6 @@ export const performSearch = async (
         config.tools = [{ googleSearch: {} }];
         config.thinkingConfig = { thinkingBudget: 32768 };
         config.systemInstruction = "You are a world-class financial analyst and business strategist. Your task is to generate a comprehensive and visually appealing analytical report on a global company specified by the user. The report must be formatted in Markdown and include the following sections: ## Company Overview, ## Financial Highlights (present key metrics in a Markdown table), ## SWOT Analysis (Strengths, Weaknesses, Opportunities, Threats), ## Market Position & Competitors, and ## Strategic Recommendations. The analysis must be insightful, data-driven (using your internal knowledge), and professionally presented.";
-        break;
-      case 'solid-sonic': case 'flash-lite': case 'thinking':
-        config.tools = [{ googleSearch: {} }];
-        if (mode === 'thinking') {
-            config.thinkingConfig = { thinkingBudget: 24576 };
-            config.systemInstruction = "You are the AI for 'Najd Smart', a helpful assistant with deep knowledge of the Najd region of Saudi Arabia. Your answers should be insightful, culturally relevant, and helpful, and grounded in up-to-date information from the web. Format your responses using Markdown.";
-        } else {
-            config.systemInstruction = "You are a fast and concise AI assistant. Get straight to the point and use web search for up-to-date information. Format your responses using Markdown.";
-        }
         break;
       case 'presentation':
         config.tools = [{ googleSearch: {} }];
@@ -483,4 +470,3 @@ export const generateCounterArguments = async (slides: Slide[]): Promise<string>
 
     return response.text;
 };
-    

@@ -8,15 +8,10 @@ interface LoadingSpinnerProps {
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ mode }) => {
   const getMessage = () => {
     switch (mode) {
-      case 'thinking':
-        return "...جاري التفكير بعمق";
-      case 'gpt-5':
-        return "...جاري الاستعانة بالذكاء الاصطناعي المتقدم";
-      case 'solid-sonic':
-        return "...جاري توليد استجابة سريعة";
+      case 'najd-ai':
+        return "...يستحضر نجد AI الحكمة من الرمال الرقمية";
       case 'maps':
         return "...جاري البحث عن أماكن";
-      case 'web':
       default:
         return "...جاري البحث في رمال نجد";
     }

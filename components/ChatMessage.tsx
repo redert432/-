@@ -1,20 +1,8 @@
 import React from 'react';
-import { Source } from '../types';
-
-interface ChatMessage {
-    id: string;
-    sender: 'user' | 'ai';
-    text: string;
-    imageUrl?: string;
-    videoUrl?: string;
-    sources?: Source[];
-    weather?: { location: string; temperature: string; forecast: string; icon: string; };
-    isThinking?: boolean;
-    loadingMessage?: string;
-}
+import { Source, AiChatMessage } from '../types';
 
 interface ChatMessageProps {
-  message: ChatMessage;
+  message: AiChatMessage;
 }
 
 const formatResultText = (text: string) => {
